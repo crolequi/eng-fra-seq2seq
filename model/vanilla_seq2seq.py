@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from ..data_preprocess import get_vocab_loader
 
 
 class Seq2SeqEncoder(nn.Module):
@@ -38,3 +39,11 @@ class Seq2SeqModel(nn.Module):
 
     def forward(self, encoder_inputs, decoder_inputs):
         return self.decoder(decoder_inputs, self.encoder(encoder_inputs))
+
+
+def get_model():
+    src_vocab, tgt_vocab, _, _ = get_vocab_loader()
+    encoder = Seq2SeqEncoder(len(src_vocab), len(src_vocab), 256, num_layers=2, dropout=0.1)
+    decoder = Seq2SeqDecoder(len(tgt_vocab), len(tgt_vocab), 256, num_layers=2, dropout=0.1)
+    net = Seq2SeqModel(encoder, decoder)
+    return net

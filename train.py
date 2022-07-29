@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from ..data_preprocess import get_loader_vocab
-from ..model.vanilla_seq2seq import Seq2SeqDecoder, Seq2SeqEncoder, Seq2SeqModel
+from .data_preprocess import get_vocab_loader
+# you can choose different model
+from .model.vanilla_seq2seq import get_model
 
 
 def setup_seed(seed):
@@ -39,10 +40,8 @@ LR = 0.001
 EPOCHS = 50
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-src_vocab, tgt_vocab, train_loader, test_loader = get_loader_vocab()
-encoder = Seq2SeqEncoder(len(src_vocab), len(src_vocab), 256, num_layers=2, dropout=0.1)
-decoder = Seq2SeqDecoder(len(tgt_vocab), len(tgt_vocab), 256, num_layers=2, dropout=0.1)
-net = Seq2SeqModel(encoder, decoder).to(device)
+src_vocab, tgt_vocab, train_loader, test_loader = get_vocab_loader()
+net = get_model().to(device)
 criterion = nn.CrossEntropyLoss(ignore_index=1)
 optimizer = torch.optim.Adam(net.parameters(), lr=LR)
 
