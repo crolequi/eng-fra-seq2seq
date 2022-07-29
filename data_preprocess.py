@@ -60,7 +60,7 @@ def build_data(tokens, vocab, seq_len):
     return torch.tensor([vocab[truncate_pad(line + ['<eos>'], seq_len)] for line in tokens])
 
 
-def get_loader(train_size=190000, test_size=4000, batch_size=512, seq_len=45):
+def get_loader_vocab(train_size=190000, test_size=4000, batch_size=512, seq_len=45):
     with open('data/eng-fra.txt', encoding='utf-8') as f:
         content = ['\t'.join(line.strip().split('\t')[:-1]) for line in f.readlines()]
 
@@ -76,4 +76,4 @@ def get_loader(train_size=190000, test_size=4000, batch_size=512, seq_len=45):
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_data, batch_size=1)
 
-    return train_loader, test_loader
+    return src_vocab, tgt_vocab, train_loader, test_loader
