@@ -77,3 +77,7 @@ def get_loader(train_size=190000, test_size=4000, batch_size=512, seq_len=45):
     test_loader = DataLoader(test_data, batch_size=1)
 
     return train_loader, test_loader
+
+
+for i in range(10):
+    print(i)
