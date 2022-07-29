@@ -61,7 +61,7 @@ def build_data(tokens, vocab, seq_len):
 
 
 def get_loader(train_size=190000, test_size=4000, batch_size=512, seq_len=45):
-    with open('fra.txt', encoding='utf-8') as f:
+    with open('data/eng-fra.txt', encoding='utf-8') as f:
         content = ['\t'.join(line.strip().split('\t')[:-1]) for line in f.readlines()]
 
     src_tokens, tgt_tokens = tokenize(data_cleaning(content))
