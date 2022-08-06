@@ -36,6 +36,8 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
     return train_loss
 
 
+setup_seed(42)
+
 LR = 0.001
 EPOCHS = 50
 
