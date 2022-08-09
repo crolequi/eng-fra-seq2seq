@@ -52,4 +52,3 @@ torch.save(net.state_dict(), 'seq2seq_params.pt')
 plt.plot(train_loss)
 plt.ylabel('train loss')
 plt.show()
-
