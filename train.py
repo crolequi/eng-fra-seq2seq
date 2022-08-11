@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from .data_preprocess import get_vocab_loader
+from data_preprocess import get_vocab_loader
 # you can choose different model
-from .model.vanilla_seq2seq import get_model
+from model.vanilla_seq2seq import get_model
 
 
 def setup_seed(seed):

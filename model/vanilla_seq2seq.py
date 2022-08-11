@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from ..data_preprocess import get_vocab_loader
+from data_preprocess import get_vocab_loader
 
 
 class Seq2SeqEncoder(nn.Module):
