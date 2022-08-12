@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from data_preprocess import get_vocab_loader
-# you can choose different model
+# Import different models for training
 from model.vanilla_seq2seq import get_model
 
 
@@ -36,8 +36,8 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
     return train_loss
 
 
+# Basic settings
 setup_seed(42)
-
 LR = 0.001
 EPOCHS = 50
 
@@ -47,9 +47,9 @@ net = get_model().to(device)
 criterion = nn.CrossEntropyLoss(ignore_index=1)
 optimizer = torch.optim.Adam(net.parameters(), lr=LR)
 
+# Training
 train_loss = train(train_loader, net, criterion, optimizer, EPOCHS)
 torch.save(net.state_dict(), 'seq2seq_params.pt')
 plt.plot(train_loss)
 plt.ylabel('train loss')
-plt.savefig('./1.png')
-plt.show()
+plt.savefig('./loss.png')
