@@ -4,7 +4,7 @@ Some seq2seq implementations(vanilla, attn, transformer).
 ## Comparison of different models
 
 |model | Encoder|Decoder|
-|--|--|
+|--|--|--|
 |vanilla seq2seq|GRU|GRU|
 
 
