@@ -39,16 +39,17 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
 # Basic settings
 setup_seed(42)
 LR = 0.001
-EPOCHS = 50
+NUM_EPOCH = 50
+BATCH_SIZE = 512
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-src_vocab, tgt_vocab, train_loader, test_loader = get_vocab_loader()
+src_vocab, tgt_vocab, train_loader, test_loader = get_vocab_loader(batch_size=BATCH_SIZE)
 net = get_model().to(device)
 criterion = nn.CrossEntropyLoss(ignore_index=1)
 optimizer = torch.optim.Adam(net.parameters(), lr=LR)
 
 # Training
-train_loss = train(train_loader, net, criterion, optimizer, EPOCHS)
+train_loss = train(train_loader, net, criterion, optimizer, NUM_EPOCH)
 torch.save(net.state_dict(), 'seq2seq_params.pt')
 plt.plot(train_loss)
 plt.ylabel('train loss')
