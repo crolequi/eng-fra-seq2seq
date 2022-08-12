@@ -41,7 +41,8 @@ def evaluate(test_loader, model, bleu_k):
         tgt_seq = tgt_vocab[
             tgt_seq[:tgt_seq.index(tgt_vocab['<eos>'])]] if tgt_vocab['<eos>'] in tgt_seq else tgt_vocab[tgt_seq]
         translation_results.append((' '.join(tgt_seq), ' '.join(pred_seq)))
-        bleu_scores.append(bleu(tgt_seq, pred_seq, k=bleu_k))
+        if len(pred_seq) >= bleu_k:
+            bleu_scores.append(bleu(tgt_seq, pred_seq, k=bleu_k))
 
     return bleu_scores, translation_results
 
@@ -51,12 +52,12 @@ SEQ_LEN = 45
 src_vocab, tgt_vocab, _, test_loader = get_vocab_loader()
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 net = get_model().to(device)
-net.load_state_dict(torch.load('params/vanilla_seq2seq.pt'))
+net.load_state_dict(torch.load('./params/vanilla_seq2seq.pt'))
 
 # Evaluation
-bleu_1_scores, _ = evaluate(test_loader, net, bleu_k=1)
 bleu_2_scores, _ = evaluate(test_loader, net, bleu_k=2)
 bleu_3_scores, _ = evaluate(test_loader, net, bleu_k=3)
+bleu_4_scores, _ = evaluate(test_loader, net, bleu_k=4)
 print(
-    f"BLEU-1: {math.mean(bleu_1_scores)} | BLEU-2: {math.mean(bleu_2_scores)} | BLEU-3: {math.mean(bleu_3_scores)}"
+    f"BLEU-2: {math.mean(bleu_2_scores)} | BLEU-3: {math.mean(bleu_3_scores)} | BLEU-4: {math.mean(bleu_4_scores)}"
 )

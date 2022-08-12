@@ -6,9 +6,6 @@ __pycache__/
 # Ignore .DS_Store
 **/.DS_Store
 
-# Ignore params
-params/
-
 # C extensions
 *.so
 

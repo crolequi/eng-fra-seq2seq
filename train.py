@@ -51,7 +51,7 @@ optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
 # Training
 train_loss = train(train_loader, net, criterion, optimizer, NUM_EPOCH)
-torch.save(net.state_dict(), 'vanilla_seq2seq.pt')
+torch.save(net.state_dict(), './params/vanilla_seq2seq.pt')
 plt.plot(train_loss)
 plt.ylabel('train loss')
 plt.savefig('./loss.png')
