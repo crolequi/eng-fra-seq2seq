@@ -19,6 +19,8 @@ Some seq2seq implementations(vanilla, attn, transformer, bert).
 Take `vanilla_seq2seq` as an example, simply run the following command in the terminal
 
 ```bash
+git clone git@github.com:sonvier/eng-fra-seq2seq.git
+cd eng-fra-seq2seq/
 mkdir params output && nohup python -um model.vanilla_seq2seq > ./output/train.log 2>&1 &
 ```
 
