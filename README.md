@@ -11,7 +11,7 @@ Some seq2seq implementations(vanilla, attn, transformer, bert).
 
 | model| Avg BLEU-2|Avg BLEU-3|Avg BLEU-4|
 |:-:|:-:|:-:|:-:|
-|vanilla seq2seq|0.6341|0.5121|0.4103|
+|vanilla seq2seq|0.4799|0.3229|0.2144|
 
 
 ## Train and evaluate model
