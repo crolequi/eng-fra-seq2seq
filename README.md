@@ -19,5 +19,5 @@ Some seq2seq implementations(vanilla, attn, transformer, bert).
 Take `vanilla_seq2seq` as an example, simply run the following command in the terminal
 
 ```bash
-mkdir output && nohup python -um model.vanilla_seq2seq > ./output/train.log 2>&1 &
+mkdir params output && nohup python -um model.vanilla_seq2seq > ./output/train.log 2>&1 &
 ```
