@@ -12,10 +12,13 @@ Architecture:
 
 Performance:
 
+.center[
+
 | model| Avg BLEU-2|Avg BLEU-3|Avg BLEU-4|
 |:-:|:-:|:-:|:-:|
 |Vanilla seq2seq|0.4799|0.3229|0.2144|
 
+]
 
 ## Train and evaluate model
 
