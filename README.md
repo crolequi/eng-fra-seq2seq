@@ -16,7 +16,7 @@ Some seq2seq implementations(vanilla, attn, transformer, bert).
 
 ## Train and evaluate model
 
-Take `vanilla_seq2seq` as an example, simply run the following command in the terminal
+Take `vanilla_seq2seq` as an example, simply run the following commands in the terminal
 
 ```bash
 git clone git@github.com:sonvier/eng-fra-seq2seq.git
