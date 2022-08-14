@@ -12,3 +12,12 @@ Some seq2seq implementations(vanilla, attn, transformer, bert).
 | model| Avg BLEU-2|Avg BLEU-3|Avg BLEU-4|
 |:-:|:-:|:-:|:-:|
 |vanilla seq2seq|0.6341|0.5121|0.4103|
+
+
+## Train and evaluate model
+
+Take `vanilla_seq2seq` as an example, simply run the following command in the terminal
+
+```bash
+mkdir output && nohup python -um model.vanilla_seq2seq > ./output/train.log 2>&1 &
+```
