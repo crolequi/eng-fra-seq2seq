@@ -3,11 +3,14 @@ Some seq2seq implementations(vanilla, attn, transformer, bert).
 
 ## Comparison of different models
 
+Architecture:
+
 |filename|model | Encoder|Decoder|
 |:-:|:-:|:-:|:-:|
 |`model/vanilla_seq2seq.py`|vanilla seq2seq|GRU|GRU|
 |`model/attn_seq2seq.py`|attention-based seq2seq|Bi-LSTM|LSTM+Attention|
 
+Performance:
 
 | model| Avg BLEU-2|Avg BLEU-3|Avg BLEU-4|
 |:-:|:-:|:-:|:-:|
