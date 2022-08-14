@@ -99,7 +99,7 @@ def evaluate(test_loader, model, bleu_k):
 
 
 # Parameter settings
-set_seed(42)
+set_seed()
 BATCH_SIZE = 512
 LR = 0.001
 EPOCHS = 50
@@ -118,10 +118,10 @@ optimizer = torch.optim.Adam(net.parameters(), lr=LR)
 
 # Training phase
 train_loss = train(train_loader, net, criterion, optimizer, EPOCHS)
-torch.save(net.state_dict(), './params/vanilla_seq2seq.pt')
+torch.save(net.state_dict(), '../params/vanilla_seq2seq.pt')
 plt.plot(train_loss)
 plt.ylabel('train loss')
-plt.savefig('./loss.png')
+plt.savefig('../output/loss.png')
 
 # Evaluation
 bleu_2_scores, _ = evaluate(test_loader, net, bleu_k=2)

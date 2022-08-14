@@ -21,3 +21,9 @@ Take `vanilla_seq2seq` as an example, simply run the following command in the te
 ```bash
 mkdir params output && nohup python -um model.vanilla_seq2seq > ./output/train.log 2>&1 &
 ```
+
+View training progress in real time
+
+```bash
+tail -f ./output/train.log
+```

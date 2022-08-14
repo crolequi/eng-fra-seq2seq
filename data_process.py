@@ -35,7 +35,7 @@ def build_data(tokens, vocab, seq_len):
 
 
 # Parameter settings
-set_seed(10086)
+set_seed()
 TRAIN_SIZE = 190000
 TEST_SIZE = 4000
 SEQ_LEN = 45
