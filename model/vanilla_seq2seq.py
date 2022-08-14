@@ -101,8 +101,8 @@ def evaluate(test_loader, model, bleu_k):
 # Parameter settings
 set_seed()
 BATCH_SIZE = 512
-LR = 0.001
-EPOCHS = 50
+LEARNING_RATE = 0.001
+NUM_EPOCHS = 50
 
 # Dataloader
 train_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True)
@@ -114,14 +114,14 @@ encoder = Seq2SeqEncoder(len(src_vocab), len(src_vocab), 256)
 decoder = Seq2SeqDecoder(len(tgt_vocab), len(tgt_vocab), 256)
 net = Seq2SeqModel(encoder, decoder).to(device)
 criterion = nn.CrossEntropyLoss(ignore_index=1)
-optimizer = torch.optim.Adam(net.parameters(), lr=LR)
+optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
 # Training phase
-train_loss = train(train_loader, net, criterion, optimizer, EPOCHS)
-torch.save(net.state_dict(), '../params/vanilla_seq2seq.pt')
+train_loss = train(train_loader, net, criterion, optimizer, NUM_EPOCHS)
+torch.save(net.state_dict(), './params/vanilla_seq2seq.pt')
 plt.plot(train_loss)
 plt.ylabel('train loss')
-plt.savefig('../output/loss.png')
+plt.savefig('./output/loss.png')
 
 # Evaluation
 bleu_2_scores, _ = evaluate(test_loader, net, bleu_k=2)
