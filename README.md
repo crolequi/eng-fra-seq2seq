@@ -7,14 +7,14 @@ Architecture:
 
 |filename|model | Encoder|Decoder|
 |:-:|:-:|:-:|:-:|
-|`model/vanilla_seq2seq.py`|vanilla seq2seq|GRU|GRU|
-|`model/attn_seq2seq.py`|attention-based seq2seq|Bi-LSTM|LSTM+Attention|
+|`model/vanilla_seq2seq.py`|Vanilla seq2seq|GRU|GRU|
+|`model/attn_seq2seq.py`|Attention-based seq2seq|Bi-LSTM|LSTM+Attention|
 
 Performance:
 
 | model| Avg BLEU-2|Avg BLEU-3|Avg BLEU-4|
 |:-:|:-:|:-:|:-:|
-|vanilla seq2seq|0.4799|0.3229|0.2144|
+|Vanilla seq2seq|0.4799|0.3229|0.2144|
 
 
 ## Train and evaluate model
