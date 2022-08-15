@@ -17,7 +17,7 @@ Performance:
 | model| Avg BLEU-2|Avg BLEU-3|Avg BLEU-4|
 |:-:|:-:|:-:|:-:|
 |Vanilla seq2seq|0.4799|0.3229|0.2144|
-
+|Attention-based seq2seq|0.5711|0.4195|0.3036|
 
 
 ## Train and evaluate model
