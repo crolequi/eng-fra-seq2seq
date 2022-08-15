@@ -31,16 +31,15 @@ class AttentionMechanism(nn.Module):
         super().__init__()
 
     def forward(self, decoder_state, encoder_output):
-        # 解码器的隐藏层大小必须是编码器的两倍，否则无法进行接下来的内积操作
         # decoder_state shape: (batch_size, 2 * hidden_size)
         # encoder_output shape: (seq_len, batch_size, 2 * hidden_size)
         decoder_state = decoder_state.unsqueeze(1)  # (batch_size, 1, 2 * hidden_size)
         encoder_output = encoder_output.transpose(0, 1)  # (batch_size, seq_len, 2 * hidden_size)
         # scores shape: (batch_size, seq_len)
-        scores = torch.sum(decoder_state * encoder_output, dim=-1) / math.sqrt(decoder_state.shape[2])  # 广播机制
+        scores = torch.sum(decoder_state * encoder_output, dim=-1) / math.sqrt(decoder_state.shape[2])
         attn_weights = F.softmax(scores, dim=-1)
         # context shape: (batch_size, 2 * hidden_size)
-        context = torch.sum(attn_weights.unsqueeze(-1) * encoder_output, dim=1)  # 广播机制
+        context = torch.sum(attn_weights.unsqueeze(-1) * encoder_output, dim=1)
         return context
 
 
@@ -54,7 +53,6 @@ class Seq2SeqDecoder(nn.Module):
 
     def forward(self, decoder_inputs, encoder_output, h_n, c_n):
         decoder_inputs = self.embedding(decoder_inputs).permute(1, 0, 2)  # (seq_len, batch_size, emb_size)
-        # 注意将其移动到GPU上
         decoder_output = torch.zeros(decoder_inputs.shape[0], *h_n.shape[1:]).to(device)  # (seq_len, batch_size, 2 * hidden_size)
         for i in range(len(decoder_inputs)):
             context = self.attn(h_n[-1], encoder_output)  # (batch_size, 2 * hidden_size)
