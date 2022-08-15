@@ -1,5 +1,5 @@
 # eng-fra-seq2seq
-Some seq2seq implementations(vanilla, attn, transformer, bert).
+Some seq2seq implementations based on eng-fra dataset(NMT task).
 
 ## Comparison of different models
 
