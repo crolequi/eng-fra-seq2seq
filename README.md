@@ -12,15 +12,17 @@ Architecture:
 
 Performance:
 
-
+<div align="center">
 
 | model| Avg BLEU-2|Avg BLEU-3|Avg BLEU-4|
 |:-:|:-:|:-:|:-:|
 |Vanilla seq2seq|0.4799|0.3229|0.2144|
 |Attention-based seq2seq|0.5711|0.4195|0.3036|
 
+</div>
 
-## Train and evaluate model
+
+## Usage
 
 Take `vanilla_seq2seq` as an example, simply run the following commands in the terminal
 
