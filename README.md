@@ -5,10 +5,14 @@ Some seq2seq implementations based on eng-fra dataset(NMT task).
 
 Architecture:
 
+<div align="center">
+
 |filename|model | Encoder|Decoder|
 |:-:|:-:|:-:|:-:|
 |`model/vanilla_seq2seq.py`|Vanilla seq2seq|GRU|GRU|
 |`model/attn_seq2seq.py`|Attention-based seq2seq|Bi-LSTM|LSTM+Attention|
+
+</div>
 
 Performance:
 
