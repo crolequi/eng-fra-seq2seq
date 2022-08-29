@@ -105,9 +105,9 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
             pred = model(encoder_inputs,
                          decoder_inputs,
                          tgt_mask=tgt_mask,
-                         src_key_padding_mask=src_key_padding_mask,
-                         tgt_key_padding_mask=tgt_key_padding_mask,
-                         memory_key_padding_mask=src_key_padding_mask)
+                         src_key_padding_mask=src_key_padding_mask.to(device),
+                         tgt_key_padding_mask=tgt_key_padding_mask.to(device),
+                         memory_key_padding_mask=src_key_padding_mask.to(device))
 
             loss = criterion(pred.permute(1, 2, 0), decoder_targets)
 
@@ -137,8 +137,8 @@ def translate(test_loader, model):
             tgt_mask = model.transformer.generate_square_subsequent_mask(len(pred_seq))
             pred = model.decoder(decoder_inputs,
                                  memory,
-                                 tgt_mask=tgt_mask,
-                                 memory_key_padding_mask=src_key_padding_mask)  # (T, 1, tgt_vocab_size)
+                                 tgt_mask=tgt_mask.to(device),
+                                 memory_key_padding_mask=src_key_padding_mask.to(device))  # (T, 1, tgt_vocab_size)
             next_token_idx = pred[-1].squeeze().argmax().item()
             if next_token_idx == tgt_vocab['<eos>']:
                 break
