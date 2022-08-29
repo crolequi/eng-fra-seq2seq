@@ -182,13 +182,12 @@ optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
 # Training phase
 train_loss = train(train_loader, net, criterion, optimizer, NUM_EPOCHS)
-torch.save(net.state_dict(), './params/vanilla_seq2seq.pt')
+torch.save(net.state_dict(), './params/trans_seq2seq.pt')
 plt.plot(train_loss)
 plt.ylabel('train loss')
 plt.savefig('./output/loss.png')
 
 # Evaluation
-bleu_2_scores, _ = evaluate(test_loader, net, bleu_k=2)
-bleu_3_scores, _ = evaluate(test_loader, net, bleu_k=3)
-bleu_4_scores, _ = evaluate(test_loader, net, bleu_k=4)
-print(f"BLEU-2: {np.mean(bleu_2_scores)} | BLEU-3: {np.mean(bleu_3_scores)} | BLEU-4: {np.mean(bleu_4_scores)}")
+translation_results = translate(test_loader, net)
+bleu_scores = evaluate(translation_results)
+print(f"BLEU-2: {bleu_scores[0]} | BLEU-3: {bleu_scores[1]} | BLEU-4: {bleu_scores[2]}")
