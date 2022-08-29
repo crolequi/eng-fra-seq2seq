@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from data_process import *
 from utils.setup import set_seed
 from utils.metrics import bleu
-from transformer import Transformer, PositionalEncoding
+from arch.transformer import Transformer, PositionalEncoding
 
 import numpy as np
 import matplotlib.pyplot as plt
