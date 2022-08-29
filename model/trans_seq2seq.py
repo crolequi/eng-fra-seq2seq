@@ -125,7 +125,6 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
 
 
 def translate(test_loader, model):
-    bleu_scores = []
     translation_results = []
     model.eval()
     for src_seq, tgt_seq in test_loader:
