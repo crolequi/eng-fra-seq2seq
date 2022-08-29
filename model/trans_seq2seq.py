@@ -104,7 +104,7 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
 
             pred = model(encoder_inputs,
                          decoder_inputs,
-                         tgt_mask=tgt_mask,
+                         tgt_mask=tgt_mask.to(device),
                          src_key_padding_mask=src_key_padding_mask.to(device),
                          tgt_key_padding_mask=tgt_key_padding_mask.to(device),
                          memory_key_padding_mask=src_key_padding_mask.to(device))
