@@ -52,11 +52,39 @@ class Seq2SeqModel(nn.Module):
         tgt = self.pe(self.tgt_embedding(tgt).transpose(0, 1))  # (T, N, E)
         transformer_output = self.transformer(src=src,
                                               tgt=tgt,
+                                              src_mask=src_mask,
                                               tgt_mask=tgt_mask,
+                                              memory_mask=memory_mask,
                                               src_key_padding_mask=src_key_padding_mask,
                                               tgt_key_padding_mask=tgt_key_padding_mask,
-                                              memory_key_padding_mask=src_key_padding_mask)  # (T, N, E)
+                                              memory_key_padding_mask=memory_key_padding_mask)  # (T, N, E)
         logits = self.out(transformer_output)  # (T, N, tgt_vocab_size)
+        return logits
+
+    def encoder(self, src, src_mask=None, src_key_padding_mask=None):
+        """
+        Args:
+            src: (N, S)
+        """
+        src = self.pe(self.src_embedding(src).transpose(0, 1))  # (S, N, E)
+        memory = self.transformer.encoder(src, src_mask, src_key_padding_mask)
+        return memory
+
+    def decoder(self,
+                tgt,
+                memory,
+                tgt_mask=None,
+                memory_mask=None,
+                tgt_key_padding_mask=None,
+                memory_key_padding_mask=None):
+        """
+        Args:
+            tgt: (N, T)
+        """
+        tgt = self.pe(self.tgt_embedding(tgt).transpose(0, 1))  # (T, N, E)
+        decoder_output = self.transformer.decoder(tgt, memory, tgt_mask, memory_mask, tgt_key_padding_mask,
+                                                  memory_key_padding_mask)
+        logits = self.out(decoder_output)
         return logits
 
 
@@ -65,10 +93,22 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
     model.train()
     for epoch in range(num_epochs):
         for batch_idx, (encoder_inputs, decoder_targets) in enumerate(train_loader):
+
             encoder_inputs, decoder_targets = encoder_inputs.to(device), decoder_targets.to(device)
             bos_column = torch.tensor([tgt_vocab['<bos>']] * decoder_targets.shape[0]).reshape(-1, 1).to(device)
             decoder_inputs = torch.cat((bos_column, decoder_targets[:, :-1]), dim=1)
-            pred, _ = model(encoder_inputs, decoder_inputs)
+
+            tgt_mask = model.transformer.generate_square_subsequent_mask(SEQ_LEN)
+            src_key_padding_mask = encoder_inputs == 1  # 因为padding_idx=1
+            tgt_key_padding_mask = decoder_inputs == 1
+
+            pred = model(encoder_inputs,
+                         decoder_inputs,
+                         tgt_mask=tgt_mask,
+                         src_key_padding_mask=src_key_padding_mask,
+                         tgt_key_padding_mask=tgt_key_padding_mask,
+                         memory_key_padding_mask=src_key_padding_mask)
+
             loss = criterion(pred.permute(1, 2, 0), decoder_targets)
 
             optimizer.zero_grad()
@@ -84,18 +124,23 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
     return train_loss
 
 
-def evaluate(test_loader, model, bleu_k):
+def translate(test_loader, model):
     bleu_scores = []
     translation_results = []
     model.eval()
     for src_seq, tgt_seq in test_loader:
         encoder_inputs = src_seq.to(device)
-        h_n = model.encoder(encoder_inputs)
+        src_key_padding_mask = encoder_inputs == 1
+        memory = model.encoder(encoder_inputs, src_key_padding_mask=src_key_padding_mask)
         pred_seq = [tgt_vocab['<bos>']]
         for _ in range(SEQ_LEN):
             decoder_inputs = torch.tensor(pred_seq[-1]).reshape(1, 1).to(device)
-            pred, h_n = model.decoder(decoder_inputs, h_n)
-            next_token_idx = pred.squeeze().argmax().item()
+            tgt_mask = model.transformer.generate_square_subsequent_mask(len(pred_seq))
+            pred = model.decoder(decoder_inputs,
+                                 memory,
+                                 tgt_mask=tgt_mask,
+                                 memory_key_padding_mask=src_key_padding_mask)  # (T, 1, tgt_vocab_size)
+            next_token_idx = pred[-1].squeeze().argmax().item()
             if next_token_idx == tgt_vocab['<eos>']:
                 break
             pred_seq.append(next_token_idx)
@@ -104,10 +149,19 @@ def evaluate(test_loader, model, bleu_k):
         tgt_seq = tgt_vocab[
             tgt_seq[:tgt_seq.index(tgt_vocab['<eos>'])]] if tgt_vocab['<eos>'] in tgt_seq else tgt_vocab[tgt_seq]
         translation_results.append((' '.join(tgt_seq), ' '.join(pred_seq)))
-        if len(pred_seq) >= bleu_k:
-            bleu_scores.append(bleu(tgt_seq, pred_seq, k=bleu_k))
+    return translation_results
 
-    return bleu_scores, translation_results
+
+def evaluate(translation_results, bleu_k_list=[2, 3, 4]):
+    assert type(bleu_k_list) == list and len(bleu_k_list) > 0
+    bleu_scores = {k: [] for k in sorted(bleu_k_list)}
+    for bleu_k in bleu_scores.keys():
+        for tgt_seq, pred_seq in translation_results:
+            if len(pred_seq) >= bleu_k:
+                bleu_scores[bleu_k].append(bleu(tgt_seq, pred_seq, k=bleu_k))
+    for bleu_k in bleu_scores.keys():
+        bleu_scores[bleu_k] = np.mean(bleu_scores[bleu_k])
+    return bleu_scores
 
 
 # Parameter settings
