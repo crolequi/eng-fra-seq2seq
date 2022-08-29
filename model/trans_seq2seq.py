@@ -175,7 +175,7 @@ test_loader = DataLoader(test_data, batch_size=1)
 
 # Model building
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-net = Seq2SeqModel()
+net = Seq2SeqModel(len(src_vocab), len(tgt_vocab))
 criterion = nn.CrossEntropyLoss(ignore_index=1)
 optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
@@ -189,4 +189,4 @@ plt.savefig('./output/loss.png')
 # Evaluation
 translation_results = translate(test_loader, net)
 bleu_scores = evaluate(translation_results)
-print(f"BLEU-2: {bleu_scores[0]} | BLEU-3: {bleu_scores[1]} | BLEU-4: {bleu_scores[2]}")
+print(f"BLEU-2: {bleu_scores[2]} | BLEU-3: {bleu_scores[3]} | BLEU-4: {bleu_scores[4]}")
