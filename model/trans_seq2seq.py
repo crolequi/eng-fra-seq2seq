@@ -175,7 +175,7 @@ test_loader = DataLoader(test_data, batch_size=1)
 
 # Model building
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-net = Seq2SeqModel(len(src_vocab), len(tgt_vocab))
+net = Seq2SeqModel(len(src_vocab), len(tgt_vocab)).to(device)
 criterion = nn.CrossEntropyLoss(ignore_index=1)
 optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
