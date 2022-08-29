@@ -1,3 +1,4 @@
+import math
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -22,6 +23,7 @@ class Seq2SeqModel(nn.Module):
                  dim_feedforward=2048,
                  dropout=0.1):
         super().__init__()
+        self.d_model = d_model
         self.src_embedding = nn.Embedding(src_vocab_size, d_model)
         self.tgt_embedding = nn.Embedding(tgt_vocab_size, d_model)
         self.pe = PositionalEncoding(d_model, dropout)
@@ -48,8 +50,8 @@ class Seq2SeqModel(nn.Module):
             tgt_key_padding_mask: (N, T)
             memory_key_padding_mask: (N, S)
         """
-        src = self.pe(self.src_embedding(src).transpose(0, 1))  # (S, N, E)
-        tgt = self.pe(self.tgt_embedding(tgt).transpose(0, 1))  # (T, N, E)
+        src = self.pe(self.src_embedding(src).transpose(0, 1) * math.sqrt(self.d_model))  # (S, N, E)
+        tgt = self.pe(self.tgt_embedding(tgt).transpose(0, 1) * math.sqrt(self.d_model))  # (T, N, E)
         transformer_output = self.transformer(src=src,
                                               tgt=tgt,
                                               src_mask=src_mask,
@@ -66,7 +68,7 @@ class Seq2SeqModel(nn.Module):
         Args:
             src: (N, S)
         """
-        src = self.pe(self.src_embedding(src).transpose(0, 1))  # (S, N, E)
+        src = self.pe(self.src_embedding(src).transpose(0, 1) * math.sqrt(self.d_model))
         memory = self.transformer.encoder(src, src_mask, src_key_padding_mask)
         return memory
 
@@ -81,7 +83,7 @@ class Seq2SeqModel(nn.Module):
         Args:
             tgt: (N, T)
         """
-        tgt = self.pe(self.tgt_embedding(tgt).transpose(0, 1))  # (T, N, E)
+        tgt = self.pe(self.tgt_embedding(tgt).transpose(0, 1) * math.sqrt(self.d_model))
         decoder_output = self.transformer.decoder(tgt, memory, tgt_mask, memory_mask, tgt_key_padding_mask,
                                                   memory_key_padding_mask)
         logits = self.out(decoder_output)
@@ -124,6 +126,7 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
     return train_loss
 
 
+@torch.no_grad()
 def translate(test_loader, model):
     translation_results = []
     model.eval()
@@ -133,17 +136,19 @@ def translate(test_loader, model):
         memory = model.encoder(encoder_inputs, src_key_padding_mask=src_key_padding_mask)
         pred_seq = [tgt_vocab['<bos>']]
         for _ in range(SEQ_LEN):
-            decoder_inputs = torch.tensor(pred_seq[-1]).reshape(1, 1).to(device)
+            decoder_inputs = torch.tensor(pred_seq).reshape(1, -1).to(device)  # 注意是pred_seq而不是pred_seq[-1]
             tgt_mask = model.transformer.generate_square_subsequent_mask(len(pred_seq))
-            pred = model.decoder(decoder_inputs,
-                                 memory,
-                                 tgt_mask=tgt_mask.to(device),
-                                 memory_key_padding_mask=src_key_padding_mask.to(device))  # (T, 1, tgt_vocab_size)
-            next_token_idx = pred[-1].squeeze().argmax().item()
+            pred = model.decoder(
+                decoder_inputs,
+                memory,
+                tgt_mask=tgt_mask.to(device),
+                memory_key_padding_mask=src_key_padding_mask.to(device))  # (SEQ_LEN, 1, tgt_vocab_size)
+            next_token_idx = pred[-1].squeeze().argmax().item()  # 选取输出序列的最后一个词元
             if next_token_idx == tgt_vocab['<eos>']:
                 break
             pred_seq.append(next_token_idx)
         pred_seq = tgt_vocab[pred_seq[1:]]
+        assert len(pred_seq) > 0, "The predicted sequence is empty!"
         tgt_seq = tgt_seq.squeeze().tolist()
         tgt_seq = tgt_vocab[
             tgt_seq[:tgt_seq.index(tgt_vocab['<eos>'])]] if tgt_vocab['<eos>'] in tgt_seq else tgt_vocab[tgt_seq]
@@ -167,7 +172,7 @@ def evaluate(translation_results, bleu_k_list=[2, 3, 4]):
 set_seed()
 BATCH_SIZE = 512
 LEARNING_RATE = 0.001
-NUM_EPOCHS = 50
+NUM_EPOCHS = 1
 
 # Dataloader
 train_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True)
