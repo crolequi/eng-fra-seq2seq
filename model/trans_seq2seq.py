@@ -172,7 +172,7 @@ def evaluate(translation_results, bleu_k_list=[2, 3, 4]):
 set_seed()
 BATCH_SIZE = 512
 LEARNING_RATE = 0.0001
-NUM_EPOCHS = 1
+NUM_EPOCHS = 50
 
 # Dataloader
 train_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True)
