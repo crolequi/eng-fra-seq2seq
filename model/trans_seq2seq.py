@@ -142,7 +142,7 @@ def translate(test_loader, model):
                 decoder_inputs,
                 memory,
                 tgt_mask=tgt_mask.to(device),
-                memory_key_padding_mask=src_key_padding_mask.to(device))  # (SEQ_LEN, 1, tgt_vocab_size)
+                memory_key_padding_mask=src_key_padding_mask.to(device))  # (len(pred_seq), 1, tgt_vocab_size)
             next_token_idx = pred[-1].squeeze().argmax().item()  # 选取输出序列的最后一个词元
             if next_token_idx == tgt_vocab['<eos>']:
                 break
@@ -171,7 +171,7 @@ def evaluate(translation_results, bleu_k_list=[2, 3, 4]):
 # Parameter settings
 set_seed()
 BATCH_SIZE = 512
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.0001
 NUM_EPOCHS = 1
 
 # Dataloader
@@ -182,7 +182,7 @@ test_loader = DataLoader(test_data, batch_size=1)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 net = Seq2SeqModel(len(src_vocab), len(tgt_vocab)).to(device)
 criterion = nn.CrossEntropyLoss(ignore_index=1)
-optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
+optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE, betas=(0.9, 0.98), eps=1e-9)
 
 # Training phase
 train_loss = train(train_loader, net, criterion, optimizer, NUM_EPOCHS)
