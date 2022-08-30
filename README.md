@@ -23,7 +23,7 @@ Performance:
 |:-:|:-:|:-:|:-:|
 |Vanilla seq2seq|0.4799|0.3229|0.2144|
 |Attention-based seq2seq|0.5711|0.4195|0.3036|
-|Transformer|  0.7992 |  0.7579 |  0.7337  |
+|Transformer| 0.7992| 0.7579| 0.7337 |
 
 </div>
 
