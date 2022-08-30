@@ -136,14 +136,14 @@ def translate(test_loader, model):
         memory = model.encoder(encoder_inputs, src_key_padding_mask=src_key_padding_mask)
         pred_seq = [tgt_vocab['<bos>']]
         for _ in range(SEQ_LEN):
-            decoder_inputs = torch.tensor(pred_seq).reshape(1, -1).to(device)  # 注意是pred_seq而不是pred_seq[-1]
+            decoder_inputs = torch.tensor(pred_seq).reshape(1, -1).to(device)
             tgt_mask = model.transformer.generate_square_subsequent_mask(len(pred_seq))
             pred = model.decoder(
                 decoder_inputs,
                 memory,
                 tgt_mask=tgt_mask.to(device),
                 memory_key_padding_mask=src_key_padding_mask.to(device))  # (len(pred_seq), 1, tgt_vocab_size)
-            next_token_idx = pred[-1].squeeze().argmax().item()  # 选取输出序列的最后一个词元
+            next_token_idx = pred[-1].squeeze().argmax().item()
             if next_token_idx == tgt_vocab['<eos>']:
                 break
             pred_seq.append(next_token_idx)
