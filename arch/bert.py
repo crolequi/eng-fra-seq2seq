@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from arch.transformer import TransformerEncoder, TransformerEncoderLayer
+import transformers
 
 
 class BERTEncoder(nn.Module):
@@ -12,7 +13,7 @@ class BERTEncoder(nn.Module):
         self.position_embedding = nn.Parameter(torch.empty(max_len, 1, d_model))  # (L, N, d)
         self.encoder_layer = TransformerEncoderLayer(d_model, nhead, dim_feedforward, dropout)
         self.encoder = TransformerEncoder(self.encoder_layer, num_layers)
-
+        
 
 
         self._reset_parameters()
