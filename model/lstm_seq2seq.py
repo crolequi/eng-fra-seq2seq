@@ -14,7 +14,7 @@ class Seq2SeqEncoder(nn.Module):
     def __init__(self, vocab_size, emb_size, hidden_size, num_layers=2, dropout=0.1):
         super().__init__()
         self.embedding = nn.Embedding(vocab_size, emb_size, padding_idx=1)
-        self.rnn = nn.GRU(emb_size, hidden_size, num_layers=num_layers, dropout=dropout)
+        self.rnn = nn.LSTM(emb_size, hidden_size, num_layers=num_layers, dropout=dropout)
 
     def forward(self, encoder_inputs):
         encoder_inputs = self.embedding(encoder_inputs).permute(1, 0, 2)
@@ -56,7 +56,7 @@ def train(train_loader, model, criterion, optimizer, num_epochs):
             encoder_inputs, decoder_targets = encoder_inputs.to(device), decoder_targets.to(device)
             bos_column = torch.tensor([tgt_vocab['<bos>']] * decoder_targets.shape[0]).reshape(-1, 1).to(device)
             decoder_inputs = torch.cat((bos_column, decoder_targets[:, :-1]), dim=1)
-            pred, _ = model(encoder_inputs, decoder_inputs)
+            pred, _, _ = model(encoder_inputs, decoder_inputs)
             loss = criterion(pred.permute(1, 2, 0), decoder_targets)
 
             optimizer.zero_grad()
