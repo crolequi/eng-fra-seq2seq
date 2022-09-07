@@ -12,6 +12,9 @@ Architecture:
 |`model/vanilla_seq2seq.py`|Vanilla seq2seq|GRU|GRU|
 |`model/attn_seq2seq.py`|Attention-based seq2seq|Bi-LSTM|LSTM+Attention|
 |`model/trans_seq2seq.py`|Transformer|Transformer|Transformer|
+|`model/bert_seq2seq.py`|BERT| BERT| Transformer|
+
+
 
 </div>
 
@@ -24,6 +27,7 @@ Performance:
 |Vanilla seq2seq|0.4799|0.3229|0.2144|
 |Attention-based seq2seq|0.5711|0.4195|0.3036|
 |Transformer| 0.7992| 0.7579| 0.7337 |
+|BERT|Coming Soon...|
 
 </div>
 
