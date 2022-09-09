@@ -29,7 +29,7 @@ Performance:
 |LSTM| 0.5021 |  0.3587 |  0.2496 |
 |Attention-based seq2seq|0.5711|0.4195|0.3036|
 |Transformer| 0.7992| 0.7579| 0.7337 |
-|BERT|Coming Soon...|Coming Soon...|Coming Soon...|
+|BERT||||
 
 </div>
 
