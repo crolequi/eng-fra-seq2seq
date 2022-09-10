@@ -3,7 +3,7 @@ from collections import Counter
 
 
 def bleu(label, pred, k=4):
-    assert len(pred) >= k, "The length of the prediction sequence must not be less than k"
+    assert len(pred) >= k
     score = math.exp(min(0, 1 - len(label) / len(pred)))
     for n in range(1, k + 1):
         hashtable = Counter([' '.join(label[i:i + n]) for i in range(len(label) - n + 1)])
