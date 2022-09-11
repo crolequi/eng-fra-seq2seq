@@ -29,9 +29,25 @@ Performance:
 |LSTM| 0.5021 |  0.3587 |  0.2496 |
 |Attention-based seq2seq|0.5711|0.4195|0.3036|
 |Transformer| 0.7992| 0.7579| 0.7337 |
-
+|Transformer Pro| | | |
 
 </div>
+
+Transformer Pro is trained on A100 GPU, the following table lists its parameter configuration
+
+<div align="center">
+
+| parameter| value |
+|:-:|:-:|
+|`d_model`| 768|
+|`nhead`|12|
+|`num_encoder_layers`|12|
+|`num_decoder_layers`|12|
+|`dim_feedforward`|3072|
+
+</div>
+
+
 
 
 ## Usage
